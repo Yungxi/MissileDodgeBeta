@@ -20,30 +20,31 @@ class Game:
         self.map = []
 
     def set_up(self):
-
+        #Setting up player, player coords, loading map
         player = Player(1, 1)
         self.player = player
         self.objects.append(player)
-        print("do set up")
         self.game_state = GameState.RUNNING
-
         self.load_map("01")
 
 
     def update(self):
+        #decides which screen to show
         if gameStart == False:
+            #start screen
             self.handle_events()
             self.render_map(self.screen)
             self.start_screen(self.screen)
         elif gameStart == True:
+            #shows blackscreen if image render fails (testing purposes)
             self.screen.fill(config.BLACK)
-
+            # start game
             if gameActive == True:
                 self.player.gravity()
                 print("update")
                 player.playerAnimation = True
 
-            elif gameActive == False:
+            elif gameActive == False: #Console message, non visilbe to player
                 print('you lose')
 
             self.handle_events()
@@ -60,7 +61,7 @@ class Game:
         self.background = pygame.transform.scale(self.background,(config.SCREEN_WIDTH,config.SCREEN_HEIGHT))
         screen.blit(self.background, (0,0))
 
-        #Sound
+        #Sound Options
         if mute > 0:
             self.mutebutton = pygame.image.load('imgs/unmute.png')
             pygame.mixer.init()
@@ -87,16 +88,19 @@ class Game:
         global counter
         increaseDiff = 30
 
+        #creating missile objects
         self.nm1 = pygame.image.load('imgs/n-missle.png')
         self.nm1 = pygame.transform.scale(self.nm1, (config.MISSILESCALE*2,config.MISSILESCALE))
         self.hitbox1 = pygame.Rect(missilcoords.nm1x,missilcoords.nm1y,config.MISSILESCALE*2,config.MISSILESCALE/2)
         screen.blit(self.nm1, self.hitbox1)
         if gameActive == True:
             missilcoords.nm1x += missilcoords.easyvel
+            #generating random missile coordinates after the first go off screen (random missile patterns)
             if missilcoords.nm1x > 680:
                 missilcoords.nm1x = -150
                 missilcoords.nm1y = random.randint(3,278)
         elif gameActive == False:
+            #stopping missiles when game has ended
             missilcoords.nm1x = missilcoords.nm1x
 
         self.nm2 = pygame.image.load('imgs/n-missle.png')
@@ -190,18 +194,19 @@ class Game:
             missilcoords.nm5x = missilcoords.nm5x
 
 
-
+        #list of all missile hitboxes created with pygame.rect
         checkcoords = [self.hitbox1,self.hitbox2,self.hitbox3,self.hitboxT1,self.hitboxD1,self.hitboxD2,
                        self.hitbox4, self.hitbox5]
 
         ifCollide = self.player.rect.collidelist(checkcoords)
 
-        if ifCollide != -1 or self.player.playery > 9.2:
+        if ifCollide != -1 or self.player.playery > 9.2: #check for collision with player or if player hits ground
             self.lose_screen(self.screen)
             gameActive = False
 
 
     def scoreboard(self,screen):
+        #scoreboard
         global counter
         if gameActive == True:
             self.font = pygame.font.Font('imgs/font copy.ttf',32)
@@ -209,6 +214,7 @@ class Game:
             textcounter = str(int(counter))
             self.score = self.font.render(textcounter, True, config.WHITE)
         elif gameActive == False:
+            #stops scoreboard when game ends
             counter = counter
         screen.blit(self.score, (10, 3))
 

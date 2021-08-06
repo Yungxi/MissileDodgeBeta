@@ -23,13 +23,14 @@ class Player:
 
 
     def update_position(self):
-
+        #change vertical acceleration (up or down)
         global vel
         vel = vel *-1
 
 
 
     def movef(self):
+        #moving forwards
         global playerAnimation
         global walking
         if self.playerx < 0.2:
@@ -46,6 +47,7 @@ class Player:
             print('gameover')
 
     def moveb(self):
+        #moving backwards
         global playerAnimation
         global walking
         if self.playerx > 12:
@@ -82,6 +84,7 @@ class Player:
         global playerAnimation
         counter = counter + 3.7
         if playerAnimation == True:
+            #animating player avatar frame by frame
             if counter < 60 and counter > 30:
                 self.image = pygame.image.load('imgs/player1.png')
                 self.image = pygame.transform.scale(self.image, (config.SCALE, config.SCALE))
